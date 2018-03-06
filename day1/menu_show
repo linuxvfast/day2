@@ -1,0 +1,121 @@
+__author__ = 'progress'
+import os
+
+data ={
+    "电器":{
+        "厨房电器":{
+             "热水壶":['苏泊尔','九阳','半球'],
+             "电饭煲":['美的','飞利浦','大松'],
+             "电磁炉":['美的','苏泊尔','九阳'],
+             "微波炉":['美的','格兰仕','松下']
+         },
+        "卫浴电器":{
+             "浴霸":{'奥普','长虹','新飞'},
+             "排风扇":['奥普','正野','艾美特']
+         },
+        "家用电器":{
+             "电视":['海信','创维','TCL'],
+             "空调":['格力','至高'],
+             "洗衣机":['海尔','澳柯玛','容声']
+         },
+    },
+    "服装":{
+        "男装":{
+             "外套":['羽绒服','夹克','卫衣'],
+             "毛衣":['羊毛衫','针织衫'],
+             "裤子":['牛仔裤','休闲裤','沙滩裤']
+         },
+        "女装":{
+             "外套":['羽绒服','夹克'],
+             "裤子":['牛仔裤','弹力裤','热裤'],
+             "裙子":['连衣裙','短裙']
+         },
+    },
+    "数码":{
+         "电脑":{
+             "笔记本":['游戏本','超极本','商务本'],
+             "配件":['显示器','电源','CPU','内存','硬盘','键鼠','主板'],
+             "平板":['iOS','Android','Windows']
+         },
+         "手机":{
+             "华为":['mete10','P10','V9'],
+             "苹果":['Iphone8','Iphone8PLUS','IphoneX'],
+             "小米":['小米6','小米MIX2','红米']
+         },
+    },
+}
+
+def store_date():
+    #保存数据到文件
+    base_dir= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    judge = os.path.isdir(base_dir)
+    print(judge)
+    if judge == False:
+        os.makedirs(base_dir)
+        os.chdir(base_dir)
+        with open('data.txt','w',encoding='utf-8') as f:
+            f.write(str(data))
+    else:
+        os.chdir(base_dir)
+        os.chdir('db')
+        with open('data.txt', 'w', encoding='utf-8') as f:
+            f.write(str(data))
+
+def read_json():
+    #从文件读取数据
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(base_dir)
+    os.chdir('db')
+    with open('data.txt','r',encoding='utf-8') as f:
+        for line in f:
+            data = eval(line.strip())
+    return data
+
+def show_menu(menu,level):
+    #循环显示目录
+    num = len(level)
+    for i in menu:
+        print('\t'*num+'%s'%i)
+    return menu
+
+
+def current_level(menu,level_list):
+    #判断当前显示的目录是多少级
+    if len(level) > 0:
+        for i in range(len(level)):
+            current_menu = menu[level[i]]
+            menu = current_menu
+    elif len(level) == 0:
+        current_menu = menu
+    return current_menu
+
+
+level = []
+def run():
+    # store_date()
+    data = read_json()
+    res = show_menu(data, level)
+    while True:
+        choose = input('请选择购买的产品分类,返回上一层(b),退出(q):')
+        if choose == 'q':
+            print('已经正常退出')
+            break
+        elif choose == 'b' or choose == 'B' :
+            if len(level) > 0:
+                level.pop()
+                last_menu = current_level(data, level)
+                res = show_menu(last_menu, level)
+            else:
+                print("已经是最顶层")
+        elif choose not in res:
+            print("输入有误")
+        else:
+            if len(level) < 3:
+                level.append(choose)
+                next_menu = current_level(data, level)
+                res = show_menu(next_menu, level)
+            else:
+                print("已经是最后一层")
+
+
+
