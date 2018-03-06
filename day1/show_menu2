@@ -1,0 +1,38 @@
+
+#对menu_show.py中多循环退出的调整优化
+exit_flags=False
+while not exit_flags:
+    for menu_1 in data:
+        print(menu_1)
+    # break
+    choice = input('选择分类继续,返回上一层(b),退出(q):')
+    if choice in data:
+        while not exit_flags:
+            for menu_2 in data[choice]:
+                print('\t',menu_2)
+            choice_2 = input('选择分类继续,返回上一层(b),退出(q):')
+            if choice_2 in data[choice]:
+                while not exit_flags:
+                    for menu_3 in data[choice][choice_2]:
+                        print('\t\t',menu_3)
+                    choice_3 = input('选择分类继续,返回上一层(b),退出(q):')
+                    if choice_3 in data[choice][choice_2]:
+                        for menu_4 in data[choice][choice_2][choice_3]:
+                            print('\t\t\t',menu_4)
+                        choice_4 = input('最后一层,返回上一层(b),退出(q):')
+                        if choice_4 == 'q':
+                            exit_flags = True
+
+                    if choice_3 == 'b':
+                        break
+                    elif choice_3 == 'q':
+                        exit_flags = True
+                        break
+            if choice_2 == 'b':
+                break
+            elif choice_2 == 'q':
+                exit_flags = True
+                break
+    elif choice == 'q':
+        exit_flags = True
+        break
