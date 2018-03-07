@@ -1,0 +1,13 @@
+level = []
+while True:
+    for menu in data:
+        print(menu)
+    choice = input('选择进入:').strip()
+    if choice == 'b':
+        if len(level) == 0:break
+        data = level[-1]  #取父目录
+        level.pop()    #删除父目录
+    if len(choice) == 0 or choice not in data:continue
+
+    level.append(data)   #存放下一级目录的父目录
+    data = data[choice]  #根据父目录键,查找子目录
